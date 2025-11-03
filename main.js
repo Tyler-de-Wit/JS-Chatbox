@@ -14,6 +14,7 @@ function receiveMessage(event) {
     // Get user input from the form
     let userInput = document.querySelector('.chatbox-input').value;
 
+    // Run functions to output the user message and then generate a response
     outputMessage('You', userInput, getTime());
     createAutomatedResponse();
 }
@@ -24,17 +25,77 @@ function createAutomatedResponse() {
 
     // Get user input from last element of chatMessagesObject message array
     let userInput = chatMessagesObject.message.at(-1);
+    userInput = userInput.toLowerCase();
 
-    // Test userInput for keywords so a response can be made
-    if (userInput.toLowerCase().includes('microsoft')) {
-        let automatedMessage = 'You should visit our <a href="microsoft-setup.html">Microsoft Setup</a> page';
-        outputMessage('Library', automatedMessage, getTime());
-    } else {
-        let automatedMessage = "Sorry, We don't have a page about that"
+    // Test userInput for keywords so a response can be made and output
+    if (userInput.includes('microsoft') || userInput.includes('authenticator')) { // Microsoft Setup
+        let automatedMessage = 'You should visit our <a href="microsoft-setup.html">Microsoft Setup</a> page to learn more';
         outputMessage('Library', automatedMessage, getTime());
     }
-
-    console.log(chatMessagesObject);
+    else if(userInput.includes('blackboard')) { // Access Blackboard
+        let automatedMessage = 'You should visit our <a href="access-blackboard.html">Access Blackboard</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('contact') || userInput.includes('help')) { // Contact Us
+        let automatedMessage = 'You should visit our <a href="contact.html">Contact</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('email')) { // Email Tips
+        let automatedMessage = 'You should visit our <a href="email-tips.html">Email Tips</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('printers')) { // Library Printers
+        let automatedMessage = 'You should visit our <a href="library-printers.html">Library Printers</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('study')) { // Library Study Rooms
+        let automatedMessage = 'You should visit our <a href="library-study-rooms.html">Library Study Rooms</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('timetable')) { // Locating Timetable
+        let automatedMessage = 'You should visit our <a href="locating-timetable.html">Locating Timetable</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('wifi') || userInput.includes('wi-fi')) { // Login To Wifi
+        let automatedMessage = 'You should visit our <a href="login-to-wifi.html">Login To WIFI</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('resources')) { // Online Resources
+        let automatedMessage = 'You should visit our <a href="online-resources.html">Online Resources</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('password')) { // Password Help
+        let automatedMessage = 'You should visit our <a href="password-help.html">Password Help</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('reference') || userInput.includes('referencing')) { // Referencing
+        let automatedMessage = 'You should visit our <a href="referencing.html">Referencing</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('sitemap') || userInput.includes('page')) { // Sitemap
+        let automatedMessage = 'You should visit our <a href="sitemap.html">Sitemap</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('card')) { // Student Card
+        let automatedMessage = 'You should visit our <a href="student-card.html">Student Card</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('discount') || userInput.includes('smartrider') || userInput.includes('smart rider') || userInput.includes('transperth')) { // Student Discount
+        let automatedMessage = 'You should visit our <a href="student-discount.html">Student Discount</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('portal')) { // Student Portal
+        let automatedMessage = 'You should visit our <a href="student-portal.html">Student Portal</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else if(userInput.includes('contacts') || userInput.includes('tafe')) { // TAFE Contacts
+        let automatedMessage = 'You should visit our <a href="tafe-contacts.html">TAFE Contacts</a> page to learn more';
+        outputMessage('Library', automatedMessage, getTime());
+    }
+    else {
+        let automatedMessage = "Sorry, We can't find a page that suits your needs"
+        outputMessage('Library', automatedMessage, getTime());
+    }
 }
 
 // Output messages to the chatbox
@@ -55,7 +116,7 @@ function outputMessage(messageSender, messageText, messageTime) {
     chatMessagesObject.message.push(messageText);
     chatMessagesObject.time.push(messageTime);
 
-    // Output the message into the html
+    // Output the message inside of html tags into the chatbox
     document.querySelector('.chatbox-messages').innerHTML += messageOutput;
 
     // Scroll to bottom of the chats so user can see the most recent ones
