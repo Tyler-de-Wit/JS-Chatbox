@@ -6,6 +6,16 @@ const chatMessagesObject = {
 }
 
 
+// Use session storage to fill the chatbox conversation saved from other pages on the site
+function fillPreviousConversation(conversationObject) {
+    'use strict';
+
+    // Loop through arrays in conversationObject and run outputMessage function to display stored messages in the chatbox
+    for (let i = 0; i < conversationObject.message.length; i++) {
+        outputMessage(conversationObject.sender[i], conversationObject.message[i], conversationObject.time[i]);
+    }
+}
+
 // Handle the message that the user typed in
 function receiveMessage(event) {
     'use strict';
@@ -116,6 +126,10 @@ function outputMessage(messageSender, messageText, messageTime) {
     chatMessagesObject.message.push(messageText);
     chatMessagesObject.time.push(messageTime);
 
+    // Convert object to JSON string and store it in session variable for use across pages
+    const chatMessagesObjectToString = JSON.stringify(chatMessagesObject);
+    sessionStorage.setItem("conversation", chatMessagesObjectToString);
+
     // Output the message inside of html tags into the chatbox
     document.querySelector('.chatbox-messages').innerHTML += messageOutput;
 
@@ -146,6 +160,9 @@ function clearChat() {
 
     // Empty input field
     document.querySelector('.chatbox-input').value = '';
+
+    // Clear session variable
+    sessionStorage.removeItem('conversation');
 }
 
 // Get the current time in hours and minutes
@@ -171,6 +188,13 @@ function init() {
 
     // Runs clearChat function when button is clicked
     document.querySelector('.clear-chat-button').addEventListener('click', clearChat);
+
+    // Runs fillPreviousConversation if previous conversation is stored in session varaible
+    const sessionConversationString = sessionStorage.getItem('conversation');
+    const sessionConversationObject = JSON.parse(sessionConversationString);
+    if (sessionConversationObject !== null) {
+        fillPreviousConversation(sessionConversationObject);
+    }
 }
 
 // Runs init function
