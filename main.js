@@ -24,9 +24,12 @@ function receiveMessage(event) {
     // Get user input from the form
     let userInput = document.querySelector('.chatbox-input').value;
 
-    // Run functions to output the user message and then generate a response
-    outputMessage('You', userInput, getTime());
-    createAutomatedResponse();
+    // Check if user entered any text before running functions
+    if (userInput !== '') {
+        // Run functions to output the user message and then generate a response
+        outputMessage('You', userInput, getTime());
+        createAutomatedResponse();
+    }
 }
 
 // Create the automated response to the user
