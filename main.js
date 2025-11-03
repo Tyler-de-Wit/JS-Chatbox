@@ -97,9 +97,10 @@ function receiveMessage() {
     userInputs.push(userInput);
 
     outputMessage(userInput, 'You');
+    createAutomatedResponse();
 }
 
-// Output the users message to the chatbox
+// Output messages to the chatbox
 function outputMessage(messageText, messageSender) {
     'use strict';
 
@@ -114,6 +115,19 @@ function outputMessage(messageText, messageSender) {
 
     // Output the message into the html
     document.querySelector('.chatbox-messages').innerHTML += messageOutput;
+}
+
+// Create the automated response to the user
+function createAutomatedResponse() {
+    'use strict';
+
+    // Get user input from last element of userInputs array
+    let userInput = userInputs.at(-1);
+
+    // Test userInput for keywords so a response can be made
+    if (userInput.toLowerCase().includes('microsoft')) {
+        outputMessage('You should visit our <a href="microsoft-setup.html">Microsoft Setup</a> page', 'Library');
+    }
 }
 
 // Clear the chat inside the box 

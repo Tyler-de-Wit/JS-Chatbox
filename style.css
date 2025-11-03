@@ -41,6 +41,10 @@
     color: #fff;
 }
 
+.message:nth-child(even) {
+    background-color: #1c9bef;
+}
+
 .message-sender {
     font-weight: bold;
     margin-bottom: 0.31em;
