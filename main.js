@@ -1,107 +1,44 @@
-// @ts-nocheck
-
-// const johnSelectorBtn = document.querySelector('#john-selector')
-// const janeSelectorBtn = document.querySelector('#jane-selector')
-// const chatHeader = document.querySelector('.chat-header')
-// const chatMessages = document.querySelector('.chat-messages')
-// const chatInputForm = document.querySelector('.chat-input-form')
-// const chatInput = document.querySelector('.chat-input')
-// const clearChatBtn = document.querySelector('.clear-chat-button')
-
-// const messages = JSON.parse(localStorage.getItem('messages')) || []
-
-// const createChatMessageElement = (message) => `
-//   <div class="message ${message.sender === 'John' ? 'blue-bg' : 'gray-bg'}">
-//     <div class="message-sender">${message.sender}</div>
-//     <div class="message-text">${message.text}</div>
-//     <div class="message-timestamp">${message.timestamp}</div>
-//   </div>
-// `
-
-// window.onload = () => {
-//   messages.forEach((message) => {
-//     chatMessages.innerHTML += createChatMessageElement(message)
-//   })
-// }
-
-// let messageSender = 'John'
-
-// const updateMessageSender = (name) => {
-//   messageSender = name
-//   chatHeader.innerText = `${messageSender} chatting...`
-//   chatInput.placeholder = `Type here, ${messageSender}...`
-
-//   if (name === 'John') {
-//     johnSelectorBtn.classList.add('active-person')
-//     janeSelectorBtn.classList.remove('active-person')
-//   }
-//   if (name === 'Jane') {
-//     janeSelectorBtn.classList.add('active-person')
-//     johnSelectorBtn.classList.remove('active-person')
-//   }
-
-//   /* auto-focus the input field */
-//   chatInput.focus()
-// }
-
-// johnSelectorBtn.onclick = () => updateMessageSender('John')
-// janeSelectorBtn.onclick = () => updateMessageSender('Jane')
-
-// const sendMessage = (e) => {
-//   e.preventDefault()
-
-//   const timestamp = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-//   const message = {
-//     sender: messageSender,
-//     text: chatInput.value,
-//     timestamp,
-//   }
-
-//   /* Save message to local storage */
-//   messages.push(message)
-//   localStorage.setItem('messages', JSON.stringify(messages))
-
-//   /* Add message to DOM */
-//   chatMessages.innerHTML += createChatMessageElement(message)
-
-//   /* Clear input field */
-//   chatInputForm.reset()
-
-//   /*  Scroll to bottom of chat messages */
-//   chatMessages.scrollTop = chatMessages.scrollHeight
-// }
-
-// chatInputForm.addEventListener('submit', sendMessage)
-
-// clearChatBtn.addEventListener('click', () => {
-//   localStorage.clear()
-//   chatMessages.innerHTML = ''
-// })
-
-
-
-
-// Create array for user inputs
-const userInputs = [];
+// Create object for chat messages
+const chatMessagesObject = {
+    sender: [],
+    message: [],
+    time: []
+}
 
 
 // Handle the message that the user typed in
-function receiveMessage() {
+function receiveMessage(event) {
     'use strict';
     event.preventDefault();
 
     // Get user input from the form
     let userInput = document.querySelector('.chatbox-input').value;
 
-    // Push user input to the userInputs array
-    userInputs.push(userInput);
-
-    outputMessage(userInput, 'You');
+    outputMessage('You', userInput, getTime());
     createAutomatedResponse();
 }
 
+// Create the automated response to the user
+function createAutomatedResponse() {
+    'use strict';
+
+    // Get user input from last element of chatMessagesObject message array
+    let userInput = chatMessagesObject.message.at(-1);
+
+    // Test userInput for keywords so a response can be made
+    if (userInput.toLowerCase().includes('microsoft')) {
+        let automatedMessage = 'You should visit our <a href="microsoft-setup.html">Microsoft Setup</a> page';
+        outputMessage('Library', automatedMessage, getTime());
+    } else {
+        let automatedMessage = "Sorry, We don't have a page about that"
+        outputMessage('Library', automatedMessage, getTime());
+    }
+
+    console.log(chatMessagesObject);
+}
+
 // Output messages to the chatbox
-function outputMessage(messageText, messageSender) {
+function outputMessage(messageSender, messageText, messageTime) {
     'use strict';
 
     // Set the message to be output
@@ -109,42 +46,60 @@ function outputMessage(messageText, messageSender) {
         <div class="message">
             <div class="message-sender">${messageSender}</div>
             <div class="message-text">${messageText}</div>
-            <div class="message-timestamp">10:30 AM</div>
+            <div class="message-timestamp">${messageTime}</div>
         </div>
     `
 
+    // Push message information to object
+    chatMessagesObject.sender.push(messageSender);
+    chatMessagesObject.message.push(messageText);
+    chatMessagesObject.time.push(messageTime);
+
     // Output the message into the html
     document.querySelector('.chatbox-messages').innerHTML += messageOutput;
-}
 
-// Create the automated response to the user
-function createAutomatedResponse() {
-    'use strict';
+    // Scroll to bottom of the chats so user can see the most recent ones
+    document.querySelector('.chatbox-messages').scrollTop = document.querySelector('.chatbox-messages').scrollHeight;
 
-    // Get user input from last element of userInputs array
-    let userInput = userInputs.at(-1);
-
-    // Test userInput for keywords so a response can be made
-    if (userInput.toLowerCase().includes('microsoft')) {
-        outputMessage('You should visit our <a href="microsoft-setup.html">Microsoft Setup</a> page', 'Library');
-    }
+    // Empty input field
+    document.querySelector('.chatbox-input').value = '';
 }
 
 // Clear the chat inside the box 
 function clearChat() {
     'use strict';
 
-    // Remove all entries from userInputs array
-    while (userInputs.length > 0) {
-        userInputs.pop();
+    // Remove all entries from chatMessagesObject arrays
+    while (chatMessagesObject.sender.length > 0) {
+        chatMessagesObject.sender.pop();
+    }
+    while (chatMessagesObject.message.length > 0) {
+        chatMessagesObject.message.pop();
+    }
+    while (chatMessagesObject.time.length > 0) {
+        chatMessagesObject.time.pop();
     }
 
     // Remove all messages from html chatbox
     document.querySelector('.chatbox-messages').innerHTML = '';
+
+    // Empty input field
+    document.querySelector('.chatbox-input').value = '';
 }
 
+// Get the current time in hours and minutes
+function getTime() {
+    'use strict';
 
+    // Get date and seperate it into hours and minutes
+    var date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    // Make time variables with formatting
+    let time = hours + ':' + minutes;
 
+    return time;
+}
 
 // Event listeners 
 function init() {
@@ -157,6 +112,5 @@ function init() {
     document.querySelector('.clear-chat-button').addEventListener('click', clearChat);
 }
 
-
 // Runs init function
-window.onload = init;
+window.onload = init();
